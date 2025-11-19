@@ -1,3 +1,4 @@
+import { ClassicProfile, L2Profile } from "../config/L2Profile";
 import L2Buff from "../entities/L2Buff";
 import L2Character from "../entities/L2Character";
 import L2Creature from "../entities/L2Creature";
@@ -180,12 +181,17 @@ export default interface ClientCommands {
 export default abstract class ClientCommands {
   protected logger: Logger = Logger.getLogger(this.constructor.name);
 
-  LoginClient = new LoginClient();
+  protected profile: L2Profile;
 
-  GameClient = new GameClient();
+  LoginClient: LoginClient;
+
+  GameClient: GameClient;
 
   protected commands: Record<string, ICommand> = commands;
-  constructor() {
+  constructor(profile?: L2Profile) {
+    this.profile = profile ?? ClassicProfile;
+    this.LoginClient = new LoginClient(this.profile);
+    this.GameClient = new GameClient(this.profile);
     return new Proxy<ClientCommands>(this, {
       get(target: ClientCommands, propertyKey: string, receiver: any) {
         if (propertyKey in target) {

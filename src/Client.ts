@@ -1,3 +1,4 @@
+import { L2Profile } from "./config/L2Profile";
 import { EventHandler } from "./mmocore/EventEmitter";
 import L2Buff from "./entities/L2Buff";
 import L2Creature from "./entities/L2Creature";
@@ -14,6 +15,10 @@ import ClientCommands from "./commands/ClientCommands";
  * Lineage 2 Client main class
  */
 export default class Client extends ClientCommands {
+  constructor(profile?: L2Profile) {
+    super(profile);
+  }
+
   get Me(): L2User {
     return this.GameClient.ActiveChar;
   }
