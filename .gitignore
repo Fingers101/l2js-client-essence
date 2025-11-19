@@ -5,3 +5,7 @@ dist
 node_modules
 .idea
 *.iml
+l2-client/**/*.js
+l2-client/**/*.d.ts
+!l2-client/renderer/env.d.ts
+!l2-client/renderer/src/global.d.ts

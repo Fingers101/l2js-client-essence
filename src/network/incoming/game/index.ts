@@ -77,6 +77,7 @@ import RecipeItemMakeInfo from "./RecipeItemMakeInfo";
 import RelationChanged from "./RelationChanged";
 import RestartResponse from "./RestartResponse";
 import Revive from "./Revive";
+import SSQInfo from "./SSQInfo";
 import SendTradeRequest from "./SendTradeRequest";
 import ServerClose from "./ServerClose";
 import SetupGauge from "./SetupGauge";
@@ -89,7 +90,6 @@ import Snoop from "./Snoop";
 import SocialAction from "./SocialAction";
 import SpawnItem from "./SpawnItem";
 import SpecialCamera from "./SpecialCamera";
-import SSQInfo from "./SSQInfo";
 import StartPledgeWar from "./StartPledgeWar";
 import StartRotation from "./StartRotation";
 import StaticObject from "./StaticObject";
@@ -206,6 +206,7 @@ export {
   RelationChanged,
   RestartResponse,
   Revive,
+  SSQInfo,
   SendTradeRequest,
   ServerClose,
   SetupGauge,
@@ -218,7 +219,6 @@ export {
   SocialAction,
   SpawnItem,
   SpecialCamera,
-  SSQInfo,
   StartPledgeWar,
   StartRotation,
   StaticObject,

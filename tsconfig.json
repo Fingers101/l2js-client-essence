@@ -8,6 +8,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
+    "skipLibCheck": true,
     "removeComments": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
@@ -15,6 +16,6 @@
     "esModuleInterop": true,
     "experimentalDecorators": true
   },
-  "include": ["**/*"],
+  "include": ["src/**/*"],
   "exclude": ["**/dist/**/*.d.ts", "./*.js", "dist", "node_modules", "examples", "proxy"]
 }

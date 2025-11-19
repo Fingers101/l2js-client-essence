@@ -37,6 +37,10 @@ export default class GameClient extends MMOClient {
     return this.ActiveChar.Buffs;
   }
 
+  private get shouldUseGameEncryption(): boolean {
+    return this.Config?.UseGameEncryption !== false;
+  }
+
   constructor() {
     super();
     this.PacketHandler = new GamePacketHandler();
@@ -59,9 +63,15 @@ export default class GameClient extends MMOClient {
   }
 
   encrypt(buf: Uint8Array, offset: number, size: number): void {
+    if (!this.shouldUseGameEncryption) {
+      return;
+    }
     this._gameCrypt.encrypt(buf, offset, size);
   }
   decrypt(buf: Uint8Array, offset: number, size: number): void {
+    if (!this.shouldUseGameEncryption) {
+      return;
+    }
     this._gameCrypt.decrypt(buf, offset, size);
   }
   setCryptInitialKey(key: Uint8Array): void {
@@ -71,7 +81,9 @@ export default class GameClient extends MMOClient {
   pack(gsp: GameServerPacket): Uint8Array {
     gsp.write();
 
-    this._gameCrypt.encrypt(gsp.Buffer, 0, gsp.Position);
+    if (this.shouldUseGameEncryption) {
+      this._gameCrypt.encrypt(gsp.Buffer, 0, gsp.Position);
+    }
 
     const sendable: Uint8Array = new Uint8Array(gsp.Position + 2);
     sendable[0] = (gsp.Position + 2) & 0xff;

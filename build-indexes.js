@@ -8,7 +8,7 @@ function buildMutators(dirname, packetsPath) {
     exp = "";
 
   files.forEach((file) => {
-    const fullPath = `${dirname}\\${file}`;
+    const fullPath = path.join(dirname, file);
     if (file !== index && fs.existsSync(fullPath) && path.extname(file) === ".ts") {
       const baseName = path.basename(file, path.extname(file));
       const packetName = baseName.replace("Mutator", "");
@@ -36,7 +36,7 @@ function buildPackets(dirname) {
   let exp = "";
 
   files.forEach((file) => {
-    const fullPath = `${dirname}\\${file}`;
+    const fullPath = path.join(dirname, file);
     if (file !== index && fs.existsSync(fullPath) && path.extname(file) === ".ts") {
       const baseName = path.basename(file, path.extname(file));
       includes = `${includes}import ${baseName} from "./${baseName}";\n`;
@@ -60,7 +60,7 @@ function buildCommands(dirname) {
   let exp = "";
 
   files.forEach((file) => {
-    const fullPath = `${dirname}\\${file}`;
+    const fullPath = path.join(dirname, file);
     if (file !== index && fs.existsSync(fullPath) && path.extname(file) === ".ts" && file.startsWith("Command")) {
       const baseName = path.basename(file, path.extname(file));
       let key = baseName.substr(7);
