@@ -5,3 +5,6 @@ dist
 node_modules
 .idea
 *.iml
+build
+renderer/dist
+.env

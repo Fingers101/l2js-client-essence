@@ -58,10 +58,20 @@ export default class GameClient extends MMOClient {
     return this;
   }
 
+  private get isEncryptionEnabled(): boolean {
+    return this.Config?.UseGameEncryption !== false;
+  }
+
   encrypt(buf: Uint8Array, offset: number, size: number): void {
+    if (!this.isEncryptionEnabled) {
+      return;
+    }
     this._gameCrypt.encrypt(buf, offset, size);
   }
   decrypt(buf: Uint8Array, offset: number, size: number): void {
+    if (!this.isEncryptionEnabled) {
+      return;
+    }
     this._gameCrypt.decrypt(buf, offset, size);
   }
   setCryptInitialKey(key: Uint8Array): void {

@@ -21,7 +21,10 @@
     "lint": "eslint ./src/**",
     "dev:docs": "vuepress dev vuePress",
     "build:docs": "vuepress build vuePress",
-    "publish": "npm publish --access public"
+    "publish": "npm publish --access public",
+    "client:dev": "concurrently -k \"npm:client:dev:renderer\" \"npm:client:dev:electron\"",
+    "client:dev:renderer": "vite --config renderer/vite.config.ts",
+    "client:dev:electron": "wait-on tcp:5173 && cross-env TS_NODE_PROJECT=electron/tsconfig.json ELECTRON_RENDERER_URL=http://localhost:5173 electron -r ts-node/register ./electron/main.ts"
   },
   "keywords": [
     "lineage2",
@@ -51,13 +54,24 @@
     "url": "https://github.com/npetrovski/l2js-client/issues"
   },
   "homepage": "https://github.com/npetrovski/l2js-client",
-  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^16.11.10",
+    "@babylonjs/core": "^7.9.0",
+    "@types/linkify-it": "^5.0.0",
+    "@types/node": "^20.11.28",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "electron": "^29.4.6",
     "eslint": "^8.3.0",
+    "ts-node": "^10.9.2",
     "typescript": "^4.7.3",
-    "vuepress": "^1.8.2"
+    "vite": "^5.0.12",
+    "vuepress": "^1.8.2",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "linkify-it": "^5.0.0"
   }
 }

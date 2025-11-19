@@ -9,4 +9,6 @@ export default class MMOConfig {
   Ip = "127.0.0.1";
   Port = 2106;
   InitialBlowfishKey?: Uint8Array;
+  ProtocolVersion = 273;
+  UseGameEncryption = true;
 }

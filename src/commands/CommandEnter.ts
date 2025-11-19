@@ -80,7 +80,11 @@ export default class CommandEnter extends AbstractGameCommand {
             this.GameClient.Session = this.LoginClient.Session;
             this.GameClient.init(gameConfig as MMOConfig);
             this.GameClient.connect()
-              .then(() => this.GameClient.sendPacket(new ProtocolVersion()))
+              .then(() =>
+                this.GameClient.sendPacket(
+                  new ProtocolVersion(this.GameClient.Config.ProtocolVersion ?? 273)
+                )
+              )
               .catch((e) => reject(e));
           });
 

@@ -8,6 +8,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
+    "skipLibCheck": true,
     "removeComments": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
@@ -16,5 +17,15 @@
     "experimentalDecorators": true
   },
   "include": ["**/*"],
-  "exclude": ["**/dist/**/*.d.ts", "./*.js", "dist", "node_modules", "examples", "proxy"]
+  "exclude": [
+    "**/dist/**/*.d.ts",
+    "./*.js",
+    "dist",
+    "node_modules",
+    "examples",
+    "proxy",
+    "electron",
+    "renderer",
+    "shared"
+  ]
 }
