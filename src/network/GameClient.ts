@@ -10,8 +10,10 @@ import L2User from "../entities/L2User";
 import MMOClient from "../mmocore/MMOClient";
 import MMOConfig from "../mmocore/MMOConfig";
 import MMOConnection from "../mmocore/MMOConnection";
+import { ClassicProfile, L2Profile, MobiusEssenceProfile } from "../config/L2Profile";
 import GameCrypt from "./GameCrypt";
-import GamePacketHandler from "./GamePacketHandler";
+import GamePacketHandlerClassic from "./GamePacketHandlerClassic";
+import GamePacketHandlerEssence from "./GamePacketHandlerEssence";
 import GameServerPacket from "./outgoing/game/GameServerPacket";
 import L2Recipe from "../entities/L2Recipe";
 import IConnection from "../mmocore/IConnection";
@@ -20,6 +22,7 @@ import SocketFactory from "../socket/SocketFactory";
 
 export default class GameClient extends MMOClient {
   private _gameCrypt: GameCrypt = new GameCrypt();
+  profile: L2Profile;
   Config!: MMOConfig;
   ActiveChar: L2User = new L2User();
   CreaturesList: L2ObjectCollection<L2Creature> = new L2ClientObjectCollection(this);
@@ -37,9 +40,13 @@ export default class GameClient extends MMOClient {
     return this.ActiveChar.Buffs;
   }
 
-  constructor() {
+  constructor(profile?: L2Profile) {
     super();
-    this.PacketHandler = new GamePacketHandler();
+    this.profile = profile ?? ClassicProfile;
+    this.PacketHandler =
+      this.profile.name === MobiusEssenceProfile.name
+        ? new GamePacketHandlerEssence()
+        : new GamePacketHandlerClassic();
 
     mutators.forEach((m) => {
       const mutator = Object.create(m[0], {
@@ -59,9 +66,15 @@ export default class GameClient extends MMOClient {
   }
 
   encrypt(buf: Uint8Array, offset: number, size: number): void {
+    if (!this.profile.useGameEncryption) {
+      return;
+    }
     this._gameCrypt.encrypt(buf, offset, size);
   }
   decrypt(buf: Uint8Array, offset: number, size: number): void {
+    if (!this.profile.useGameEncryption) {
+      return;
+    }
     this._gameCrypt.decrypt(buf, offset, size);
   }
   setCryptInitialKey(key: Uint8Array): void {
@@ -71,7 +84,9 @@ export default class GameClient extends MMOClient {
   pack(gsp: GameServerPacket): Uint8Array {
     gsp.write();
 
-    this._gameCrypt.encrypt(gsp.Buffer, 0, gsp.Position);
+    if (this.profile.useGameEncryption) {
+      this._gameCrypt.encrypt(gsp.Buffer, 0, gsp.Position);
+    }
 
     const sendable: Uint8Array = new Uint8Array(gsp.Position + 2);
     sendable[0] = (gsp.Position + 2) & 0xff;

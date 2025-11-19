@@ -1,8 +1,10 @@
 import AbstractGameCommand from "./AbstractGameCommand";
 import Say2 from "../network/outgoing/game/Say2";
+import Say2Essence from "../network/outgoing/game/essence/Say2Essence";
 
 export default class CommandSayToTrade extends AbstractGameCommand {
   execute(text: string): void {
-    this.GameClient?.sendPacket(new Say2(Say2.TRADE, text));
+    const SayPacket = this.isMobiusEssence ? Say2Essence : Say2;
+    this.GameClient?.sendPacket(new SayPacket(SayPacket.TRADE, text));
   }
 }

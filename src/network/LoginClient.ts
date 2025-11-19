@@ -1,3 +1,4 @@
+import { ClassicProfile, L2Profile } from "../config/L2Profile";
 import MMOClient from "../mmocore/MMOClient";
 import MMOConfig from "../mmocore/MMOConfig";
 import MMOConnection from "../mmocore/MMOConnection";
@@ -15,6 +16,7 @@ export default class LoginClient extends MMOClient {
   Servers: L2Server[] = [];
   ServerId = 1;
   Config!: MMOConfig;
+  profile: L2Profile;
 
   get BlowfishKey(): Uint8Array {
     return this._blowfishKey;
@@ -25,8 +27,9 @@ export default class LoginClient extends MMOClient {
     this._loginCrypt.setKey(blowfishKey);
   }
 
-  constructor() {
+  constructor(profile?: L2Profile) {
     super();
+    this.profile = profile ?? ClassicProfile;
     this.PacketHandler = new LoginPacketHandler();
 
     mutators.forEach((m) => {

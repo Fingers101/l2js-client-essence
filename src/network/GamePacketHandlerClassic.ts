@@ -4,7 +4,7 @@ import ReceivablePacket from "../mmocore/ReceivablePacket";
 import GameClient from "./GameClient";
 import * as Packets from "./incoming/game/index";
 
-export default class GamePacketHandler implements IPacketHandler<GameClient> {
+export default class GamePacketHandlerClassic implements IPacketHandler<GameClient> {
   protected logger: Logger = Logger.getLogger(this.constructor.name);
 
   // @Override

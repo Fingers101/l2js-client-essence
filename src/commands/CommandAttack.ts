@@ -1,5 +1,6 @@
 import L2Object from "../entities/L2Object";
 import AttackRequest from "../network/outgoing/game/AttackRequest";
+import AttackRequestEssence from "../network/outgoing/game/essence/AttackRequestEssence";
 import AbstractGameCommand from "./AbstractGameCommand";
 
 export default class CommandAttack extends AbstractGameCommand {
@@ -10,9 +11,8 @@ export default class CommandAttack extends AbstractGameCommand {
     const me = this.GameClient?.ActiveChar;
     if (me) {
       const forceShift = shift ?? false;
-      this.GameClient?.sendPacket(
-        new AttackRequest(object, me.X, me.Y, me.Z, forceShift)
-      );
+      const AttackPacket = this.isMobiusEssence ? AttackRequestEssence : AttackRequest;
+      this.GameClient?.sendPacket(new AttackPacket(object, me.X, me.Y, me.Z, forceShift));
     }
   }
 }

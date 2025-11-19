@@ -1,3 +1,4 @@
+import { MobiusEssenceProfile } from "../config/L2Profile";
 import ICommand from "./ICommand";
 import Logger from "../mmocore/Logger";
 import LoginClient from "../network/LoginClient";
@@ -10,4 +11,8 @@ export default abstract class AbstractGameCommand implements ICommand {
 
   // @Override
   abstract execute(...args: any[]): void;
+
+  protected get isMobiusEssence(): boolean {
+    return this.GameClient.profile.name === MobiusEssenceProfile.name;
+  }
 }

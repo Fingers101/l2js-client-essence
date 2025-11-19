@@ -13,6 +13,8 @@ import AuthLogin from "../network/outgoing/game/AuthLogin";
 import CharacterCreate from "../network/outgoing/game/CharacterCreate";
 import CharacterSelect from "../network/outgoing/game/CharacterSelect";
 import EnterWorld from "../network/outgoing/game/EnterWorld";
+import CharacterSelectEssence from "../network/outgoing/game/essence/CharacterSelectEssence";
+import EnterWorldEssence from "../network/outgoing/game/essence/EnterWorldEssence";
 import NewCharacter from "../network/outgoing/game/NewCharacter";
 import ProtocolVersion from "../network/outgoing/game/ProtocolVersion";
 import RequestKeyMapping from "../network/outgoing/game/RequestKeyMapping";
@@ -80,7 +82,11 @@ export default class CommandEnter extends AbstractGameCommand {
             this.GameClient.Session = this.LoginClient.Session;
             this.GameClient.init(gameConfig as MMOConfig);
             this.GameClient.connect()
-              .then(() => this.GameClient.sendPacket(new ProtocolVersion()))
+              .then(() =>
+                this.GameClient.sendPacket(
+                  new ProtocolVersion(this.GameClient.profile.protocolVersion)
+                )
+              )
               .catch((e) => reject(e));
           });
 
@@ -100,7 +106,9 @@ export default class CommandEnter extends AbstractGameCommand {
             );
 
             this.GameClient.once("PacketReceived:CharCreateOk", (e: EPacketReceived) =>
-              this.GameClient.sendPacket(new CharacterSelect(sizeChar ?? 0))
+              this.GameClient.sendPacket(
+                new (this.isMobiusEssence ? CharacterSelectEssence : CharacterSelect)(sizeChar ?? 0)
+              )
             );
 
             this.GameClient.once("PacketReceived:CharCreateFail", (e: EPacketReceived) =>
@@ -108,14 +116,22 @@ export default class CommandEnter extends AbstractGameCommand {
             );
           } else {
             this.GameClient.once("PacketReceived:CharSelectionInfo", () =>
-              this.GameClient.sendPacket(new CharacterSelect(this.GameClient.Config.CharSlotIndex ?? 0))
+              this.GameClient.sendPacket(
+                new (this.isMobiusEssence ? CharacterSelectEssence : CharacterSelect)(
+                  this.GameClient.Config.CharSlotIndex ?? 0
+                )
+              )
             );
           }
 
           this.GameClient.once("PacketReceived:CharSelected", () => {
             this.GameClient.sendPacket(new RequestManorList())
               .then(() => this.GameClient.sendPacket(new RequestKeyMapping()))
-              .then(() => this.GameClient.sendPacket(new EnterWorld()))
+              .then(() =>
+                this.GameClient.sendPacket(
+                  new (this.isMobiusEssence ? EnterWorldEssence : EnterWorld)()
+                )
+              )
               .catch((e) => reject("Enter world fail." + e));
           });
 
